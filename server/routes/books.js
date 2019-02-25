@@ -57,18 +57,50 @@ router.post('/add', (req, res, next) => {
 
 // GET the Book Details page in order to edit an existing Book
 router.get('/:id', (req, res, next) => {
+  //Get the id parameter from the request
+  let id=req.params.id;
+  //Find the book by id from the book model and save it to bookfound
+  book.findById(id, (err,bookfound) =>{
+    if(err)
+    {
+      console.log(err);
+      res.end(err);
+    }
+    else
+    {
+      //Render the details page with passing bookfound as a parameter
+res.render('books/details',{
+  title:"Edit the selected book",
+  books:bookfound
+});
+    }
+  });
 
-    /*****************
-     * ADD CODE HERE *
-     *****************/
+    
 });
 
 // POST - process the information passed from the details form and update the document
 router.post('/:id', (req, res, next) => {
 
-    /*****************
-     * ADD CODE HERE *
-     *****************/
+    let id=req.params.id;
+     let updated_book=book({
+       "_id":id,
+       "Title":req.body.title,
+       "Price":req.body.price,
+       "Author":req.body.author,
+       "Genre":req.body.genre
+     });
+     book.update({_id:id},updated_book,(err) =>{
+       if(err)
+       {
+         console.log(err);
+         res.end(err);
+       }
+       else
+       {
+         res.redirect('/books');
+       }
+     })
 
 });
 
