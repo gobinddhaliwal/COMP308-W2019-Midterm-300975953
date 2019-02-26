@@ -1,6 +1,10 @@
+//Created by
+//Gobind Dhaliwal
+//300975953
+//COMP308-2019-Midterm
 let mongoose=require('mongoose');
 let passportlocalmongoose=require('passport-local-mongoose');
-
+//Created a Scehma for Users
 let userSchema= new mongoose.Schema({
     username: {
         type: String,

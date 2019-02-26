@@ -25,7 +25,7 @@ mongoDB.once('open', ()=> {
 });
 let app = express();
 
-
+//Create an express Session
 app.use(session({
   secret: "SomeSecret",
   saveUninitialized: true,
