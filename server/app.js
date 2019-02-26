@@ -4,6 +4,12 @@ let express = require('express');
 let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
+// modules for authentication
+let session = require('express-session');
+let passport = require('passport');
+let passportLocal = require('passport-local');
+let localStrategy = passportLocal.Strategy;
+let flash = require('connect-flash');
 
 // import "mongoose" - required for DB Access
 let mongoose = require('mongoose');
@@ -17,13 +23,25 @@ mongoDB.on('error', console.error.bind(console, 'Connection Error:'));
 mongoDB.once('open', ()=> {
   console.log("Connected to MongoDB...");
 });
+let app = express();
+
+
+app.use(session({
+  secret: "SomeSecret",
+  saveUninitialized: true,
+  resave: true
+}));
+
+// initialize passport and flash
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 // define routers
 let index = require('./routes/index'); // top level routes
 let books = require('./routes/books'); // routes for books
 
-let app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,6 +58,16 @@ app.use(express.static(path.join(__dirname, '../client')));
 // route redirects
 app.use('/', index);
 app.use('/books', books);
+
+let UserModel = require('./models/user');
+let User = UserModel.User;
+
+// implement a user strategy
+passport.use(User.createStrategy());
+
+// serialize and deserialize user info
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 
 // catch 404 and forward to error handler
