@@ -36,9 +36,8 @@
                   </td>
 
                   <td class="text-center">
-                    <!-- ------------------------ -->
-                    <!-- ADD the DELETE BUTTON HERE -->
-                    <!-- ------------------------ -->
+                    <a href="books/delete/<%=books[count]._id %>" class="btn btn-primary" onclick="if (!confirm('Are you sure?')) { return false }"">
+                      <i class="fa fa-trash"></i>Delete</a>
                   </td>
                 </tr>
                 <% } %>
